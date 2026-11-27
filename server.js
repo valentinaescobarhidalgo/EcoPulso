@@ -1199,9 +1199,7 @@ app.get('/proposito', (req, res) => {
 // INICIAR SERVIDOR
 // =====================================
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log('🌿 EcoPulso');
-    console.log(
-        `🚀 Servidor disponible en http://localhost:${PORT}`
-    );
+    console.log(`🚀 Servidor funcionando en el puerto ${PORT}`);
 });
