@@ -1,0 +1,147 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - MIS PARTICIPACIONES
+===================================== -->
+
+<section class="eco-jornadas-hero py-5 text-center">
+    <div class="container">
+
+        <span class="eco-jornadas-etiqueta">
+            <i class="bi bi-person-check-fill me-2"></i>
+            Mi perfil ciudadano
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3">
+            Mis participaciones
+        </h1>
+
+        <p class="lead mx-auto mt-3 eco-jornadas-descripcion">
+            Aquí encontrarás los proyectos ambientales
+            en los que estás participando.
+        </p>
+
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+
+        <% if (participaciones.length > 0) { %>
+
+            <div class="row g-4">
+
+                <% participaciones.forEach(participacion => { %>
+
+                    <%
+                        const proyecto = participacion.proyecto;
+
+                        const cargo = proyecto
+                            ? proyecto.cargos.id(participacion.cargo)
+                            : null;
+                    %>
+
+                    <% if (proyecto && cargo) { %>
+
+                        <div class="col-12 col-lg-6">
+
+                            <article class="card eco-jornada-card h-100 border-0 shadow-sm">
+                                <div class="card-body p-4">
+
+                                    <div class="text-center mb-4">
+
+                                        <div class="eco-jornada-icono jornada-naturaleza mx-auto mb-3">
+                                            <i class="bi bi-tree-fill"></i>
+                                        </div>
+
+                                        <span class="badge text-bg-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            Inscripción activa
+                                        </span>
+
+                                    </div>
+
+                                    <h2 class="h5 fw-bold text-center">
+                                        <%= proyecto.nombre %>
+                                    </h2>
+
+                                    <p class="text-muted mt-3">
+                                        <%= proyecto.descripcion %>
+                                    </p>
+
+                                    <div class="eco-mapa-detalles mt-4">
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-people-fill me-2"></i>
+                                            <strong>Tu cargo:</strong>
+                                            <%= cargo.nombre %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-geo-alt-fill me-2"></i>
+                                            <strong>Ubicación:</strong>
+                                            <%= proyecto.ubicacion %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-building me-2"></i>
+                                            <strong>Empresa:</strong>
+                                            <%= proyecto.empresa?.nombre || 'No disponible' %>
+                                        </p>
+
+                                        <p class="mb-0">
+                                            <i class="bi bi-person-badge me-2"></i>
+                                            <strong>Responsable:</strong>
+                                            <%= proyecto.responsable %>
+                                        </p>
+
+                                    </div>
+
+                                    <a
+                                        href="/ecojornadas?proyecto=<%= proyecto._id %>"
+                                        class="btn btn-outline-success mt-4"
+                                    >
+                                        <i class="bi bi-arrow-right-circle me-2"></i>
+                                        Ver proyecto en EcoJornadas
+                                    </a>
+
+                                </div>
+                            </article>
+
+                        </div>
+
+                    <% } %>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="eco-mapa-vacio text-center p-5">
+
+                <i class="bi bi-heart display-1"></i>
+
+                <h2 class="fw-bold mt-3">
+                    Aún no tienes participaciones
+                </h2>
+
+                <p class="text-muted">
+                    Explora los proyectos ambientales disponibles
+                    y encuentra una oportunidad para contribuir.
+                </p>
+
+                <a href="/ecojornadas" class="btn btn-eco mt-3">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Explorar EcoJornadas
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </div>
+</section>
+
+<%- include('partials/footer') %>

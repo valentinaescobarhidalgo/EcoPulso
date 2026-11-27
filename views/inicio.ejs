@@ -1,0 +1,437 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - PÁGINA DE INICIO
+===================================== -->
+
+<!-- =====================================
+     SECCIÓN PRINCIPAL DE BIENVENIDA
+===================================== -->
+
+<section class="eco-hero py-5">
+    <div class="container">
+
+        <div class="row align-items-center gy-5">
+
+            <!-- TEXTO DE BIENVENIDA -->
+            <div class="col-lg-7">
+
+                <span class="badge eco-badge mb-3">
+                    <i class="bi bi-leaf me-1"></i>
+                    Unidos por nuestro planeta
+                </span>
+
+                <h1 class="display-4 fw-bold mb-3">
+                    EcoPulso
+                    <span class="eco-texto-verde">
+                        El planeta también tiene voz
+                    </span>
+                </h1>
+
+                <p class="lead mb-4">
+                    Un espacio donde las empresas crean proyectos
+                    ambientales y los ciudadanos encuentran
+                    oportunidades para participar, proteger
+                    nuestras fuentes hídricas y transformar
+                    positivamente sus comunidades.
+                </p>
+
+                <!-- BOTONES PRINCIPALES -->
+                <div class="d-flex flex-wrap gap-3">
+
+                    <% if (usuarioActual?.rol === 'empresa') { %>
+
+                        <a
+                            href="/empresa/crear-proyecto"
+                            class="btn btn-eco btn-lg"
+                        >
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Crear un proyecto ambiental
+                        </a>
+
+                    <% } else if (!usuarioActual) { %>
+
+                        <a
+                            href="/login"
+                            class="btn btn-eco btn-lg"
+                        >
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Crear un proyecto ambiental
+                        </a>
+
+                    <% } else if (usuarioActual.rol === 'ciudadano') { %>
+
+                        <a
+                            href="/ecojornadas"
+                            class="btn btn-eco btn-lg"
+                        >
+                            <i class="bi bi-people-fill me-2"></i>
+                            Participar en un proyecto
+                        </a>
+
+                    <% } else { %>
+
+                        <a
+                            href="/admin"
+                            class="btn btn-eco btn-lg"
+                        >
+                            <i class="bi bi-kanban me-2"></i>
+                            Gestionar proyectos
+                        </a>
+
+                    <% } %>
+
+                    <a
+                        href="/proposito"
+                        class="btn btn-outline-success btn-lg"
+                    >
+                        Conoce nuestro propósito
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- IMAGEN PRINCIPAL -->
+            <div class="col-lg-5 text-center">
+
+                <div class="eco-hero-foto">
+
+                    <img
+                        src="/images/cascada.png"
+                        alt="Bosque verde lleno de vida"
+                        class="img-fluid eco-imagen-principal"
+                    >
+
+                    <div class="eco-foto-etiqueta">
+                        <i class="bi bi-heart-fill me-2"></i>
+                        ¡La naturaleza nos necesita!
+                    </div>
+
+                    <div class="eco-foto-circulo">
+                        <i class="bi bi-droplet-fill"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================
+     QUÉ PUEDES HACER EN ECOPULSO
+===================================== -->
+
+<section class="py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold">
+                ¿Qué puedes hacer en EcoPulso?
+            </h2>
+
+            <p class="text-muted">
+                Crea, descubre y participa en proyectos
+                que contribuyen al cuidado del medio ambiente.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- =====================================
+                 TARJETA: CREAR PROYECTOS
+            ===================================== -->
+
+            <div class="col-md-4">
+
+                <div class="card eco-card h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <div class="eco-card-icono mb-3">
+                            <i class="bi bi-building-add"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">
+                            Crea proyectos ambientales
+                        </h3>
+
+                        <p class="text-muted">
+                            Las empresas pueden proponer iniciativas
+                            ambientales, definir los cargos necesarios
+                            e invitar a la comunidad a colaborar.
+                        </p>
+
+                        <% if (usuarioActual?.rol === 'empresa') { %>
+
+                            <a
+                                href="/empresa/crear-proyecto"
+                                class="btn btn-outline-success"
+                            >
+                                Crear proyecto
+                            </a>
+
+                        <% } else if (!usuarioActual) { %>
+
+                            <a
+                                href="/login"
+                                class="btn btn-outline-success"
+                            >
+                                Crear proyecto
+                            </a>
+
+                        <% } else if (usuarioActual.rol === 'ciudadano') { %>
+
+                            <a
+                                href="/ecojornadas"
+                                class="btn btn-outline-success"
+                            >
+                                Explorar proyectos
+                            </a>
+
+                        <% } else { %>
+
+                            <a
+                                href="/admin"
+                                class="btn btn-outline-success"
+                            >
+                                Gestionar proyectos
+                            </a>
+
+                        <% } %>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 TARJETA: ECOMAPA
+            ===================================== -->
+
+            <div class="col-md-4">
+
+                <div class="card eco-card h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <div class="eco-card-icono mb-3">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">
+                            Explora el EcoMapa
+                        </h3>
+
+                        <p class="text-muted">
+                            Descubre dónde se desarrollan los
+                            proyectos ambientales aprobados
+                            y conoce las iniciativas disponibles
+                            en tu comunidad.
+                        </p>
+
+                        <a
+                            href="/ecomapa"
+                            class="btn btn-outline-success"
+                        >
+                            Explorar EcoMapa
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================
+                 TARJETA: ECOJORNADAS
+            ===================================== -->
+
+            <div class="col-md-4">
+
+                <div class="card eco-card h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <div class="eco-card-icono mb-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">
+                            Participa en EcoJornadas
+                        </h3>
+
+                        <p class="text-muted">
+                            Explora proyectos ambientales,
+                            consulta los cargos y cupos
+                            disponibles y encuentra una
+                            oportunidad para aportar
+                            al cuidado del planeta.
+                        </p>
+
+                        <a
+                            href="/ecojornadas"
+                            class="btn btn-outline-success"
+                        >
+                            Ver proyectos
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================
+     IMPACTO AMBIENTAL
+===================================== -->
+
+<section class="eco-impacto py-5">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="eco-impacto-etiqueta">
+                <i class="bi bi-stars me-2"></i>
+                Nuestro impacto comienza contigo
+            </span>
+
+            <h2 class="fw-bold mt-3">
+                Pequeñas acciones,
+                <span class="eco-texto-impacto">
+                    grandes cambios
+                </span>
+            </h2>
+
+            <p class="text-muted mt-3">
+                Cuidar nuestro planeta comienza con
+                decisiones sencillas que todos podemos tomar.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- AGUA -->
+            <div class="col-md-4">
+
+                <div class="eco-impacto-card impacto-agua">
+
+                    <div class="eco-impacto-icono">
+                        <i class="bi bi-droplet-fill"></i>
+                    </div>
+
+                    <h3>Cada gota cuenta</h3>
+
+                    <p>
+                        Proteger nuestras fuentes hídricas
+                        es proteger la vida.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- NATURALEZA -->
+            <div class="col-md-4">
+
+                <div class="eco-impacto-card impacto-naturaleza">
+
+                    <div class="eco-impacto-icono">
+                        <i class="bi bi-tree-fill"></i>
+                    </div>
+
+                    <h3>Cada árbol importa</h3>
+
+                    <p>
+                        Los espacios verdes son esenciales
+                        para un ambiente saludable.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMUNIDAD -->
+            <div class="col-md-4">
+
+                <div class="eco-impacto-card impacto-comunidad">
+
+                    <div class="eco-impacto-icono">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+
+                    <h3>Cada persona suma</h3>
+
+                    <p>
+                        Juntos podemos construir
+                        comunidades más sostenibles.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- =====================================
+     COMPROMISO AMBIENTAL
+===================================== -->
+
+<section class="eco-compromiso py-5">
+    <div class="container text-center">
+
+        <i class="bi bi-droplet-half eco-icono-agua"></i>
+
+        <h2 class="fw-bold mt-3">
+            Nuestro compromiso con el agua
+        </h2>
+
+        <p class="mx-auto eco-compromiso-texto">
+            En EcoPulso creemos que proteger las fuentes
+            hídricas es fundamental para el bienestar
+            de nuestras comunidades.
+
+            Por eso promovemos proyectos ambientales,
+            la participación ciudadana y el cuidado
+            del medio ambiente, en relación con el
+            Objetivo de Desarrollo Sostenible 6:
+            Agua limpia y saneamiento.
+        </p>
+
+        <a
+            href="/proposito"
+            class="btn btn-eco mt-3"
+        >
+            Conocer más
+        </a>
+
+    </div>
+</section>
+
+<%- include('partials/footer') %>

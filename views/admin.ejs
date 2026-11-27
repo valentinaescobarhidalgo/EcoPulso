@@ -1,0 +1,704 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - PANEL DE ADMINISTRACIÓN
+===================================== -->
+
+<!-- ENCABEZADO DEL PANEL -->
+<section class="eco-jornadas-hero py-5 text-center">
+    <div class="container">
+
+        <span class="eco-jornadas-etiqueta">
+            <i class="bi bi-shield-check me-2"></i>
+            Gestión ambiental
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3">
+            Panel de administración
+        </h1>
+
+        <p class="lead mx-auto mt-3 eco-jornadas-descripcion">
+            Revisa, aprueba y supervisa los proyectos
+            ambientales que forman parte de EcoPulso.
+        </p>
+
+    </div>
+</section>
+
+
+<!-- CONTENIDO PRINCIPAL -->
+<section class="py-5">
+    <div class="container">
+
+        <!-- =====================================
+             MENSAJE DE FINALIZACIÓN EXITOSA
+        ===================================== -->
+
+        <% if (finalizacionExitosa) { %>
+
+            <div class="alert alert-success mb-4" role="status">
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                <strong>¡Proyecto finalizado correctamente!</strong>
+
+                El proyecto ya no estará disponible para
+                nuevas inscripciones y quedará registrado
+                en el historial.
+            </div>
+
+        <% } %>
+
+
+        <!-- =====================================
+             RESUMEN DEL PANEL
+        ===================================== -->
+
+        <div class="row g-4 mb-5">
+
+            <!-- PROYECTOS PENDIENTES -->
+            <div class="col-12 col-md-4">
+                <div class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                    <div class="card-body text-center p-4">
+
+                        <i class="bi bi-hourglass-split text-warning fs-1"></i>
+
+                        <h2 class="h3 fw-bold mt-3">
+                            <%= proyectos.length %>
+                        </h2>
+
+                        <p class="text-muted mb-3">
+                            Proyectos pendientes
+                        </p>
+
+                        <a
+                            href="#pendientes"
+                            class="btn btn-outline-success btn-sm"
+                        >
+                            Revisar pendientes
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- PROYECTOS APROBADOS -->
+            <div class="col-12 col-md-4">
+                <div class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                    <div class="card-body text-center p-4">
+
+                        <i class="bi bi-check-circle-fill text-success fs-1"></i>
+
+                        <h2 class="h3 fw-bold mt-3">
+                            <%= proyectosAprobados.length %>
+                        </h2>
+
+                        <p class="text-muted mb-3">
+                            Proyectos aprobados
+                        </p>
+
+                        <a
+                            href="#aprobados"
+                            class="btn btn-outline-success btn-sm"
+                        >
+                            Ver proyectos activos
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- PROYECTOS FINALIZADOS -->
+            <div class="col-12 col-md-4">
+                <div class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                    <div class="card-body text-center p-4">
+
+                        <i class="bi bi-archive-fill text-secondary fs-1"></i>
+
+                        <h2 class="h3 fw-bold mt-3">
+                            <%= proyectosFinalizados.length %>
+                        </h2>
+
+                        <p class="text-muted mb-3">
+                            Proyectos finalizados
+                        </p>
+
+                        <a
+                            href="#historial"
+                            class="btn btn-outline-success btn-sm"
+                        >
+                            Consultar historial
+                        </a>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             SECCIÓN 1 - PROYECTOS PENDIENTES
+        ===================================== -->
+
+        <section id="pendientes" class="mb-5">
+
+            <div class="mb-4">
+
+                <h2 class="fw-bold eco-jornadas-titulo">
+                    <i class="bi bi-hourglass-split me-2"></i>
+                    Proyectos pendientes de aprobación
+                </h2>
+
+                <p class="text-muted">
+                    Revisa las propuestas enviadas por las
+                    empresas antes de publicarlas en EcoPulso.
+                </p>
+
+            </div>
+
+
+            <% if (proyectos.length === 0) { %>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    No hay proyectos pendientes de aprobación.
+                </div>
+
+            <% } else { %>
+
+                <div class="row g-4">
+
+                    <% proyectos.forEach(proyecto => { %>
+
+                        <div class="col-12 col-lg-6">
+
+                            <article class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                                <div class="card-body p-4">
+
+                                    <!-- ESTADO -->
+                                    <span class="badge text-bg-warning mb-3">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Pendiente
+                                    </span>
+
+
+                                    <!-- NOMBRE -->
+                                    <h3 class="h5 fw-bold">
+                                        <%= proyecto.nombre %>
+                                    </h3>
+
+
+                                    <!-- INFORMACIÓN -->
+                                    <div class="eco-mapa-detalles mt-3">
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-building me-2"></i>
+                                            <strong>Empresa:</strong>
+                                            <%= proyecto.empresa?.nombre || 'No disponible' %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-person-badge me-2"></i>
+                                            <strong>Responsable:</strong>
+                                            <%= proyecto.responsable %>
+                                        </p>
+
+                                        <p class="mb-0">
+                                            <i class="bi bi-geo-alt-fill me-2"></i>
+                                            <strong>Ubicación:</strong>
+                                            <%= proyecto.ubicacion %>
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- DESCRIPCIÓN -->
+                                    <p class="text-muted mt-3">
+                                        <%= proyecto.descripcion %>
+                                    </p>
+
+
+                                    <!-- CARGOS -->
+                                    <h4 class="h6 fw-bold mt-4">
+                                        <i class="bi bi-people-fill me-2"></i>
+                                        Cargos solicitados
+                                    </h4>
+
+                                    <ul class="list-group list-group-flush">
+
+                                        <% proyecto.cargos.forEach(cargo => { %>
+
+                                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+
+                                                <span>
+                                                    <%= cargo.nombre %>
+                                                </span>
+
+                                                <span class="badge text-bg-light">
+                                                    <%= cargo.cupos %> cupos
+                                                </span>
+
+                                            </li>
+
+                                        <% }) %>
+
+                                    </ul>
+
+
+                                    <!-- APROBAR PROYECTO -->
+                                    <div class="mt-4 pt-3 border-top">
+
+                                        <form
+                                            action="/admin/proyectos/<%= proyecto._id %>/aprobar"
+                                            method="POST"
+                                        >
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success w-100 fw-semibold"
+                                            >
+                                                <i class="bi bi-check-circle me-2"></i>
+                                                Aprobar proyecto
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+
+        <hr class="my-5">
+
+
+        <!-- =====================================
+             SECCIÓN 2 - PROYECTOS APROBADOS
+        ===================================== -->
+
+        <section id="aprobados" class="mb-5">
+
+            <div class="mb-4">
+
+                <h2 class="fw-bold eco-jornadas-titulo">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Proyectos aprobados
+                </h2>
+
+                <p class="text-muted">
+                    Estos proyectos están publicados en
+                    EcoMapa y EcoJornadas.
+
+                    Cuando un proyecto haya concluido,
+                    podrás marcarlo como finalizado.
+                </p>
+
+            </div>
+
+
+            <% if (proyectosAprobados.length === 0) { %>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Todavía no hay proyectos aprobados.
+                </div>
+
+            <% } else { %>
+
+                <div class="row g-4">
+
+                    <% proyectosAprobados.forEach(proyecto => { %>
+
+                        <div class="col-12 col-lg-6">
+
+                            <article class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                                <div class="card-body p-4">
+
+                                    <!-- ESTADO -->
+                                    <span class="badge text-bg-success mb-3">
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+                                        Aprobado
+                                    </span>
+
+
+                                    <!-- NOMBRE -->
+                                    <h3 class="h5 fw-bold">
+                                        <%= proyecto.nombre %>
+                                    </h3>
+
+
+                                    <!-- INFORMACIÓN -->
+                                    <div class="eco-mapa-detalles mt-3">
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-building me-2"></i>
+                                            <strong>Empresa:</strong>
+                                            <%= proyecto.empresa?.nombre || 'No disponible' %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-person-badge me-2"></i>
+                                            <strong>Responsable:</strong>
+                                            <%= proyecto.responsable %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-geo-alt-fill me-2"></i>
+                                            <strong>Ubicación:</strong>
+                                            <%= proyecto.ubicacion %>
+                                        </p>
+
+                                        <% if (proyecto.fechaAprobacion) { %>
+
+                                            <p class="mb-0">
+                                                <i class="bi bi-calendar-check me-2"></i>
+                                                <strong>Aprobado el:</strong>
+
+                                                <%= new Date(
+                                                    proyecto.fechaAprobacion
+                                                ).toLocaleDateString('es-CO') %>
+                                            </p>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- DESCRIPCIÓN -->
+                                    <p class="text-muted mt-3">
+                                        <%= proyecto.descripcion %>
+                                    </p>
+
+
+                                    <!-- CARGOS -->
+                                    <h4 class="h6 fw-bold mt-4">
+                                        <i class="bi bi-people-fill me-2"></i>
+                                        Cargos del proyecto
+                                    </h4>
+
+                                    <ul class="list-group list-group-flush">
+
+                                        <% proyecto.cargos.forEach(cargo => { %>
+
+                                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+
+                                                <span>
+                                                    <%= cargo.nombre %>
+                                                </span>
+
+                                                <span class="badge text-bg-light">
+                                                    <%= cargo.cupos %> cupos
+                                                </span>
+
+                                            </li>
+
+                                        <% }) %>
+
+                                    </ul>
+
+
+                                    <!-- ACCIONES -->
+                                    <div class="mt-4 pt-3 border-top d-grid gap-2">
+
+                                        <a
+                                            href="/ecojornadas?proyecto=<%= proyecto._id %>"
+                                            class="btn btn-outline-success fw-semibold"
+                                        >
+                                            <i class="bi bi-eye me-2"></i>
+                                            Ver en EcoJornadas
+                                        </a>
+
+
+                                        <!-- ABRIR CONFIRMACIÓN -->
+                                        <button
+                                            type="button"
+                                            class="btn btn-success fw-semibold"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#finalizar-<%= proyecto._id %>"
+                                        >
+                                            <i class="bi bi-flag-fill me-2"></i>
+                                            Finalizar proyecto
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- =====================================
+                                 VENTANA DE CONFIRMACIÓN
+                            ===================================== -->
+
+                            <div
+                                class="modal fade"
+                                id="finalizar-<%= proyecto._id %>"
+                                tabindex="-1"
+                                aria-labelledby="titulo-finalizar-<%= proyecto._id %>"
+                                aria-hidden="true"
+                            >
+
+                                <div class="modal-dialog modal-dialog-centered">
+
+                                    <div class="modal-content">
+
+                                        <div class="modal-header">
+
+                                            <h2
+                                                class="modal-title fs-5 fw-bold"
+                                                id="titulo-finalizar-<%= proyecto._id %>"
+                                            >
+                                                <i class="bi bi-flag-fill text-success me-2"></i>
+                                                Finalizar proyecto
+                                            </h2>
+
+                                            <button
+                                                type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Cerrar"
+                                            ></button>
+
+                                        </div>
+
+
+                                        <div class="modal-body">
+
+                                            <p>
+                                                ¿Estás seguro de que deseas
+                                                finalizar el proyecto
+                                                <strong><%= proyecto.nombre %></strong>?
+                                            </p>
+
+                                            <p class="text-muted small mb-0">
+                                                El proyecto dejará de recibir
+                                                nuevas inscripciones y pasará
+                                                al historial de EcoPulso.
+                                            </p>
+
+                                        </div>
+
+
+                                        <div class="modal-footer">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary"
+                                                data-bs-dismiss="modal"
+                                            >
+                                                Volver
+                                            </button>
+
+                                            <form
+                                                action="/admin/proyectos/<%= proyecto._id %>/finalizar"
+                                                method="POST"
+                                            >
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-success"
+                                                >
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Sí, finalizar
+                                                </button>
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- FIN DE LA VENTANA -->
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+
+        <hr class="my-5">
+
+
+        <!-- =====================================
+             SECCIÓN 3 - HISTORIAL
+        ===================================== -->
+
+        <section id="historial" class="mb-4">
+
+            <div class="mb-4">
+
+                <h2 class="fw-bold eco-jornadas-titulo">
+                    <i class="bi bi-clock-history me-2"></i>
+                    Historial de proyectos
+                </h2>
+
+                <p class="text-muted">
+                    Consulta los proyectos ambientales
+                    que ya finalizaron y permanecen
+                    registrados en EcoPulso.
+                </p>
+
+            </div>
+
+
+            <% if (proyectosFinalizados.length === 0) { %>
+
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Todavía no hay proyectos finalizados.
+                </div>
+
+            <% } else { %>
+
+                <div class="row g-4">
+
+                    <% proyectosFinalizados.forEach(proyecto => { %>
+
+                        <div class="col-12 col-lg-6">
+
+                            <article class="card eco-admin-proyecto h-100 border-0 shadow-sm">
+
+                                <div class="card-body p-4">
+
+                                    <!-- ESTADO -->
+                                    <span class="badge text-bg-secondary mb-3">
+                                        <i class="bi bi-archive-fill me-1"></i>
+                                        Finalizado
+                                    </span>
+
+
+                                    <!-- NOMBRE -->
+                                    <h3 class="h5 fw-bold">
+                                        <%= proyecto.nombre %>
+                                    </h3>
+
+
+                                    <!-- INFORMACIÓN -->
+                                    <div class="eco-mapa-detalles mt-3">
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-building me-2"></i>
+                                            <strong>Empresa:</strong>
+                                            <%= proyecto.empresa?.nombre || 'No disponible' %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-person-badge me-2"></i>
+                                            <strong>Responsable:</strong>
+                                            <%= proyecto.responsable %>
+                                        </p>
+
+                                        <p class="mb-2">
+                                            <i class="bi bi-geo-alt-fill me-2"></i>
+                                            <strong>Ubicación:</strong>
+                                            <%= proyecto.ubicacion %>
+                                        </p>
+
+                                        <% if (proyecto.fechaFinalizacion) { %>
+
+                                            <p class="mb-0">
+                                                <i class="bi bi-calendar-check me-2"></i>
+                                                <strong>Finalizado el:</strong>
+
+                                                <%= new Date(
+                                                    proyecto.fechaFinalizacion
+                                                ).toLocaleDateString('es-CO') %>
+                                            </p>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- DESCRIPCIÓN -->
+                                    <p class="text-muted mt-3">
+                                        <%= proyecto.descripcion %>
+                                    </p>
+
+
+                                    <!-- CARGOS DEL PROYECTO -->
+                                    <h4 class="h6 fw-bold mt-4">
+                                        <i class="bi bi-people-fill me-2"></i>
+                                        Cargos del proyecto
+                                    </h4>
+
+                                    <ul class="list-group list-group-flush">
+
+                                        <% proyecto.cargos.forEach(cargo => { %>
+
+                                            <li class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+
+                                                <span>
+                                                    <%= cargo.nombre %>
+                                                </span>
+
+                                                <span class="badge text-bg-light">
+                                                    <%= cargo.cupos %> cupos
+                                                </span>
+
+                                            </li>
+
+                                        <% }) %>
+
+                                    </ul>
+
+
+                                    <!-- ESTADO INFORMATIVO -->
+                                    <div class="mt-4 pt-3 border-top">
+
+                                        <p class="text-success fw-semibold mb-0">
+                                            <i class="bi bi-check-circle-fill me-2"></i>
+                                            Proyecto concluido
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </div>
+</section>
+
+<%- include('partials/footer') %>

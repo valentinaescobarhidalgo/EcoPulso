@@ -1,0 +1,498 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - ECOMAPA
+===================================== -->
+
+<link rel="stylesheet" href="/leaflet/leaflet.css">
+
+<%
+    const rolActual = usuarioActual
+        ? usuarioActual.rol
+        : 'visitante';
+
+    const textosPorRol = {
+        ciudadano: 'Ver proyecto y participar',
+        empresa: 'Ver proyecto',
+        admin: 'Ver jornada autorizada',
+        visitante: 'Conocer proyecto'
+    };
+
+    const textoAccion = textosPorRol[rolActual]
+        || 'Conocer proyecto';
+
+    const textoInvitacion = rolActual === 'admin'
+        ? 'Ver jornadas autorizadas'
+        : rolActual === 'empresa'
+            ? 'Explorar EcoJornadas'
+            : rolActual === 'ciudadano'
+                ? 'Participar en EcoJornadas'
+                : 'Conocer EcoJornadas';
+
+    const clasesProblematicas = {
+        'Contaminación del agua': 'agua',
+        'Acumulación de residuos': 'residuos',
+        'Desperdicio de agua': 'desperdicio',
+        'Deterioro de zonas verdes': 'verdes',
+        'Otras problemáticas ambientales': 'otro'
+    };
+%>
+
+<!-- =====================================
+     ENCABEZADO
+===================================== -->
+
+<section class="eco-mapa-hero py-5 text-center">
+
+    <div class="container">
+
+        <span class="eco-mapa-etiqueta mb-3">
+            <i class="bi bi-geo-alt-fill me-2"></i>
+            Descubre proyectos cerca de ti
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3">
+            Explora nuestro EcoMapa
+        </h1>
+
+        <p class="lead mx-auto mt-3 eco-mapa-descripcion">
+            Conoce dónde se desarrollan los proyectos
+            ambientales aprobados por EcoPulso
+            y descubre oportunidades para contribuir
+            al cuidado de nuestro planeta.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     MAPA INTERACTIVO
+===================================== -->
+
+<section class="py-5 eco-mapa-seccion">
+
+    <div class="container">
+
+        <div class="text-center mb-4">
+
+            <h2 class="fw-bold eco-mapa-titulo">
+                <i class="bi bi-map me-2"></i>
+                Nuestro mapa ambiental
+            </h2>
+
+            <p class="text-muted">
+                Explora las ubicaciones de los proyectos
+                ambientales y selecciona sus marcadores
+                para conocer más información.
+            </p>
+
+        </div>
+
+
+        <div class="eco-mapa-contenedor">
+
+            <div id="mapaAmbiental"></div>
+
+
+            <!-- DATOS PARA LEAFLET -->
+            <div id="datosProyectos" hidden>
+
+                <% proyectos.forEach(proyecto => { %>
+
+                    <span
+                        class="dato-proyecto"
+                        data-id="<%= proyecto._id %>"
+                        data-nombre="<%= proyecto.nombre %>"
+                        data-ubicacion="<%= proyecto.ubicacion %>"
+                        data-descripcion="<%= proyecto.descripcion %>"
+                        data-empresa="<%= proyecto.empresa?.nombre || 'Empresa ambiental' %>"
+                        data-responsable="<%= proyecto.responsable %>"
+                        data-problematica="<%= proyecto.problematica || 'Otras problemáticas ambientales' %>"
+                        data-latitud="<%= typeof proyecto.latitud === 'number' && Number.isFinite(proyecto.latitud) ? proyecto.latitud : '' %>"
+                        data-longitud="<%= typeof proyecto.longitud === 'number' && Number.isFinite(proyecto.longitud) ? proyecto.longitud : '' %>"
+                    ></span>
+
+                <% }) %>
+
+            </div>
+
+
+            <!-- LEYENDA DE COLORES -->
+            <div class="eco-mapa-leyenda mt-4">
+
+                <h3 class="h6 fw-bold text-center mb-3">
+                    <i class="bi bi-palette-fill me-2"></i>
+                    Colores según la problemática ambiental
+                </h3>
+
+                <div class="eco-leyenda-lista">
+
+                    <div class="eco-leyenda-item">
+                        <span
+                            class="eco-leyenda-punto eco-marcador-agua"
+                            aria-hidden="true"
+                        ></span>
+                        <span>Contaminación del agua</span>
+                    </div>
+
+                    <div class="eco-leyenda-item">
+                        <span
+                            class="eco-leyenda-punto eco-marcador-residuos"
+                            aria-hidden="true"
+                        ></span>
+                        <span>Acumulación de residuos</span>
+                    </div>
+
+                    <div class="eco-leyenda-item">
+                        <span
+                            class="eco-leyenda-punto eco-marcador-desperdicio"
+                            aria-hidden="true"
+                        ></span>
+                        <span>Desperdicio de agua</span>
+                    </div>
+
+                    <div class="eco-leyenda-item">
+                        <span
+                            class="eco-leyenda-punto eco-marcador-verdes"
+                            aria-hidden="true"
+                        ></span>
+                        <span>Deterioro de zonas verdes</span>
+                    </div>
+
+                    <div class="eco-leyenda-item">
+                        <span
+                            class="eco-leyenda-punto eco-marcador-otro"
+                            aria-hidden="true"
+                        ></span>
+                        <span>Otras problemáticas ambientales</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <p class="text-muted small text-center mt-3">
+                <i class="bi bi-info-circle me-1"></i>
+                Selecciona los marcadores para conocer
+                los proyectos ambientales disponibles.
+                Los proyectos nuevos pueden mostrar su
+                ubicación exacta; los anteriores utilizan
+                la dirección registrada por la empresa.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     PROYECTOS AMBIENTALES APROBADOS
+===================================== -->
+
+<section class="py-5" id="proyectosAmbientales">
+
+    <div class="container">
+
+        <!-- ENCABEZADO Y CONTADOR -->
+        <div class="row g-4 align-items-center mb-5">
+
+            <div class="col-md-8">
+
+                <h2 class="fw-bold eco-mapa-titulo">
+                    Proyectos ambientales de nuestra comunidad
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Conoce las iniciativas aprobadas
+                    por EcoPulso y descubre
+                    dónde puedes contribuir.
+                </p>
+
+            </div>
+
+
+            <div class="col-md-4">
+
+                <div class="eco-mapa-contador text-center p-4">
+
+                    <i class="bi bi-tree fs-2"></i>
+
+                    <h3 class="fw-bold mt-2 mb-0">
+                        <%= proyectos.length %>
+                    </h3>
+
+                    <p class="mb-0">
+                        Proyectos disponibles
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             TARJETAS DE PROYECTOS
+        ===================================== -->
+
+        <% if (proyectos.length > 0) { %>
+
+            <div class="row g-4">
+
+                <% proyectos.forEach(proyecto => { %>
+
+                    <%
+                        const nombreProblematica =
+                            proyecto.problematica
+                            || 'Otras problemáticas ambientales';
+
+                        const claseProblematica =
+                            clasesProblematicas[nombreProblematica]
+                            || 'otro';
+                    %>
+
+                    <div class="col-md-6 col-lg-4">
+
+                        <a
+                            href="/ecojornadas?proyecto=<%= proyecto._id %>"
+                            class="text-decoration-none d-block h-100"
+                            aria-label="<%= textoAccion %>: <%= proyecto.nombre %>"
+                        >
+
+                            <article
+                                class="card eco-mapa-card eco-mapa-card-problematica eco-mapa-card-<%= claseProblematica %> h-100 border-0 shadow-sm"
+                            >
+
+                                <div class="card-body p-4">
+
+                                    <!-- ESTADO -->
+                                    <span class="eco-mapa-tipo">
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+                                        Proyecto aprobado
+                                    </span>
+
+
+                                    <!-- NOMBRE -->
+                                    <h3 class="h5 fw-bold mt-4 eco-mapa-ubicacion">
+
+                                        <i class="bi bi-tree-fill me-2"></i>
+
+                                        <%= proyecto.nombre %>
+
+                                    </h3>
+
+
+                                    <!-- ETIQUETA DE PROBLEMÁTICA -->
+                                    <div
+                                        class="eco-mapa-problematica eco-mapa-problematica-<%= claseProblematica %> mt-3"
+                                    >
+
+                                        <span
+                                            class="eco-mapa-problematica-punto"
+                                            aria-hidden="true"
+                                        ></span>
+
+                                        <span>
+                                            <strong>Problemática:</strong>
+                                            <%= nombreProblematica %>
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- UBICACIÓN -->
+                                    <p class="mt-3 mb-2">
+
+                                        <i class="bi bi-geo-alt-fill me-2"></i>
+
+                                        <strong>Ubicación:</strong>
+
+                                        <%= proyecto.ubicacion %>
+
+                                    </p>
+
+
+                                    <!-- DESCRIPCIÓN -->
+                                    <p class="text-muted mt-3">
+
+                                        <%= proyecto.descripcion %>
+
+                                    </p>
+
+                                    <hr>
+
+
+                                    <!-- DETALLES DEL PROYECTO -->
+                                    <div class="eco-mapa-detalles">
+
+                                        <p class="mb-2">
+
+                                            <i class="bi bi-building me-2"></i>
+
+                                            <strong>Empresa:</strong>
+
+                                            <%= proyecto.empresa?.nombre || 'No disponible' %>
+
+                                        </p>
+
+
+                                        <p class="mb-2">
+
+                                            <i class="bi bi-person-badge me-2"></i>
+
+                                            <strong>Responsable:</strong>
+
+                                            <%= proyecto.responsable %>
+
+                                        </p>
+
+
+                                        <p class="mb-0">
+
+                                            <i class="bi bi-calendar-check me-2"></i>
+
+                                            <strong>Aprobado:</strong>
+
+                                            <%= proyecto.fechaAprobacion
+                                                ? new Date(
+                                                    proyecto.fechaAprobacion
+                                                ).toLocaleDateString('es-CO')
+                                                : 'Fecha no disponible' %>
+
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- ACCIÓN SEGÚN EL ROL -->
+                                    <div class="mt-3 fw-semibold text-success">
+
+                                        <%= textoAccion %>
+
+                                        <i class="bi bi-arrow-right ms-1"></i>
+
+                                    </div>
+
+                                </div>
+
+                            </article>
+
+                        </a>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="eco-mapa-vacio text-center p-5">
+
+                <i class="bi bi-tree display-1"></i>
+
+                <h3 class="fw-bold mt-3">
+                    Todavía no hay proyectos ambientales disponibles
+                </h3>
+
+                <p class="text-muted">
+                    Pronto encontrarás nuevas iniciativas
+                    en las que podrás participar.
+                </p>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     INVITACIÓN FINAL
+===================================== -->
+
+<section class="eco-mapa-invitacion py-5 text-center">
+
+    <div class="container">
+
+        <i class="bi bi-heart-fill eco-mapa-corazon"></i>
+
+        <% if (rolActual === 'admin') { %>
+
+            <h2 class="fw-bold mt-3">
+                Proyectos que hacen la diferencia
+            </h2>
+
+            <p class="mx-auto eco-mapa-invitacion-texto">
+                Consulta las iniciativas aprobadas
+                y observa cómo se presentan
+                a nuestra comunidad.
+                Cada proyecto autorizado representa
+                una oportunidad para cuidar el planeta.
+            </p>
+
+        <% } else if (rolActual === 'empresa') { %>
+
+            <h2 class="fw-bold mt-3">
+                Empresas que impulsan el cambio
+            </h2>
+
+            <p class="mx-auto eco-mapa-invitacion-texto">
+                Explora las iniciativas ambientales
+                de nuestra comunidad y conoce
+                cómo otros proyectos están
+                contribuyendo al planeta.
+            </p>
+
+        <% } else { %>
+
+            <h2 class="fw-bold mt-3">
+                ¡Tu voz también cuenta!
+            </h2>
+
+            <p class="mx-auto eco-mapa-invitacion-texto">
+                Cada proyecto ambiental es una oportunidad
+                para generar un cambio positivo.
+                Descubre cómo puedes contribuir,
+                encuentra un cargo disponible
+                y participa en el cuidado
+                de nuestra comunidad.
+            </p>
+
+        <% } %>
+
+
+        <a
+            href="/ecojornadas"
+            class="btn btn-eco btn-lg mt-3"
+        >
+
+            <i class="bi bi-people-fill me-2"></i>
+
+            <%= textoInvitacion %>
+
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     JAVASCRIPT DEL MAPA
+===================================== -->
+
+<script src="/leaflet/leaflet.js"></script>
+
+<script src="/js/ecomapa.js"></script>
+
+<%- include('partials/footer') %>

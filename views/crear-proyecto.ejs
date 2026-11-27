@@ -1,0 +1,397 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - CREAR PROYECTO AMBIENTAL
+===================================== -->
+
+<section class="container py-5">
+
+    <div class="eco-proyecto-formulario mx-auto">
+
+        <!-- ENCABEZADO -->
+        <div class="text-center mb-4">
+
+            <h1 class="fw-bold">
+                <i class="bi bi-tree-fill me-2"></i>
+                Crear proyecto ambiental
+            </h1>
+
+            <p class="text-muted">
+                Comparte tu iniciativa con la comunidad
+                y encuentra personas que quieran participar.
+            </p>
+
+        </div>
+
+
+        <!-- FORMULARIO -->
+        <div class="eco-login-tarjeta">
+
+            <form action="/empresa/proyectos" method="POST">
+
+                <!-- =====================================
+                     NOMBRE DEL PROYECTO
+                ===================================== -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="nombre"
+                        class="form-label fw-semibold"
+                    >
+                        Nombre del proyecto
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        name="nombre"
+                        maxlength="150"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     RESPONSABLE
+                ===================================== -->
+
+                <div class="mb-3">
+
+                    <label
+                        for="responsable"
+                        class="form-label fw-semibold"
+                    >
+                        Persona responsable del proyecto
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="responsable"
+                        name="responsable"
+                        maxlength="120"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     PROBLEMÁTICA AMBIENTAL
+                ===================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="problematica"
+                        class="form-label fw-semibold"
+                    >
+                        <i class="bi bi-exclamation-diamond me-2"></i>
+                        Problemática ambiental que aborda el proyecto
+                    </label>
+
+                    <select
+                        id="problematica"
+                        name="problematica"
+                        class="form-select"
+                        required
+                    >
+                        <option value="" selected disabled>
+                            Selecciona una problemática ambiental
+                        </option>
+
+                        <option value="Contaminación del agua">
+                            Contaminación del agua
+                        </option>
+
+                        <option value="Acumulación de residuos">
+                            Acumulación de residuos
+                        </option>
+
+                        <option value="Desperdicio de agua">
+                            Desperdicio de agua
+                        </option>
+
+                        <option value="Deterioro de zonas verdes">
+                            Deterioro de zonas verdes
+                        </option>
+
+                        <option value="Otras problemáticas ambientales">
+                            Otras problemáticas ambientales
+                        </option>
+                    </select>
+
+                    <p class="text-muted small mt-2 mb-0">
+                        Selecciona la problemática principal que
+                        busca atender tu proyecto. Esta categoría
+                        ayudará a identificarlo en EcoMapa
+                        mediante un marcador de color.
+                    </p>
+
+                </div>
+
+
+                <!-- =====================================
+                     UBICACIÓN DEL PROYECTO
+                ===================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="ubicacion"
+                        class="form-label fw-semibold"
+                    >
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        Ubicación del proyecto
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="ubicacion"
+                        name="ubicacion"
+                        placeholder="Ej. Parque Olaya Herrera, Pereira, Risaralda"
+                        required
+                    >
+
+                    <p class="text-muted small mt-2 mb-3">
+                        Escribe la dirección o el nombre del lugar.
+                        También puedes señalar el punto exacto
+                        en el mapa.
+                    </p>
+
+
+                    <!-- BOTÓN PARA DESPLEGAR EL MAPA -->
+                    <button
+                        type="button"
+                        id="abrirMapaProyecto"
+                        class="btn btn-outline-success"
+                        aria-expanded="false"
+                        aria-controls="panelMapaProyecto"
+                    >
+                        <i class="bi bi-map me-2"></i>
+                        Ubicar en el mapa
+                    </button>
+
+
+                    <!-- PANEL DESPLEGABLE DEL MAPA -->
+                    <div
+                        id="panelMapaProyecto"
+                        class="eco-proyecto-mapa-panel mt-3"
+                        hidden
+                    >
+
+                        <div class="eco-proyecto-mapa-encabezado">
+
+                            <h2 class="h6 fw-bold mb-2">
+                                <i class="bi bi-geo-alt-fill me-2"></i>
+                                Selecciona la ubicación exacta
+                            </h2>
+
+                            <p class="text-muted small mb-3">
+                                Haz clic sobre el lugar donde
+                                se realizará el proyecto.
+                                Después podrás ajustar el marcador
+                                y confirmar tu selección.
+                            </p>
+
+                        </div>
+
+
+                        <!-- MAPA LEAFLET -->
+                        <div
+                            id="mapaSeleccionProyecto"
+                            class="eco-proyecto-mapa"
+                            aria-label="Mapa para seleccionar la ubicación del proyecto"
+                        ></div>
+
+
+                        <!-- MENSAJE DE COORDENADAS -->
+                        <div
+                            id="estadoUbicacionProyecto"
+                            class="eco-proyecto-ubicacion-estado mt-3"
+                            role="status"
+                            aria-live="polite"
+                        >
+                            <i class="bi bi-info-circle me-1"></i>
+                            Selecciona un punto en el mapa.
+                        </div>
+
+
+                        <!-- BOTONES DEL MAPA -->
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+
+                            <button
+                                type="button"
+                                id="confirmarUbicacionProyecto"
+                                class="btn btn-success"
+                                disabled
+                            >
+                                <i class="bi bi-check-circle me-2"></i>
+                                Confirmar ubicación
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cerrarMapaProyecto"
+                                class="btn btn-outline-secondary"
+                            >
+                                Cerrar mapa
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- COORDENADAS DEL PROYECTO -->
+                    <input
+                        type="hidden"
+                        id="latitudProyecto"
+                        name="latitud"
+                    >
+
+                    <input
+                        type="hidden"
+                        id="longitudProyecto"
+                        name="longitud"
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     DESCRIPCIÓN DEL PROYECTO
+                ===================================== -->
+
+                <div class="mb-4">
+
+                    <label
+                        for="descripcion"
+                        class="form-label fw-semibold"
+                    >
+                        Descripción completa del proyecto
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        id="descripcion"
+                        name="descripcion"
+                        rows="6"
+                        placeholder="Explica qué necesita el proyecto, sus objetivos y las actividades que se realizarán."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- =====================================
+                     CARGOS Y PARTICIPANTES
+                ===================================== -->
+
+                <h2 class="h5 fw-bold mb-3">
+                    <i class="bi bi-people-fill me-2"></i>
+                    Cargos y participantes necesarios
+                </h2>
+
+                <p class="text-muted">
+                    Indica el primer cargo que necesita tu proyecto
+                    y cuántas personas pueden participar.
+                </p>
+
+
+                <!-- LISTA DE CARGOS -->
+                <div id="listaCargos">
+
+                    <div class="row g-3 mb-3 eco-cargo-fila">
+
+                        <div class="col-md-8">
+
+                            <label class="form-label fw-semibold">
+                                Nombre del cargo
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="cargoNombre[]"
+                                placeholder="Ej. Voluntario de limpieza"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <label class="form-label fw-semibold">
+                                Cupos disponibles
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="cargoCupos[]"
+                                min="1"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AGREGAR OTRO CARGO -->
+                <button
+                    type="button"
+                    id="agregarCargo"
+                    class="btn btn-outline-success mb-4"
+                >
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Agregar otro cargo
+                </button>
+
+
+                <!-- ENVIAR PROYECTO -->
+                <button
+                    type="submit"
+                    class="btn btn-success w-100 fw-bold"
+                >
+                    <i class="bi bi-send-fill me-2"></i>
+                    Enviar proyecto para aprobación
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- AVISO DE APROBACIÓN -->
+        <p class="text-center text-muted mt-4">
+            Tu proyecto será revisado por el administrador
+            antes de aparecer públicamente en EcoPulso.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     LIBRERÍA LEAFLET
+===================================== -->
+
+<link rel="stylesheet" href="/leaflet/leaflet.css">
+
+<script src="/leaflet/leaflet.js"></script>
+
+<!-- COMPORTAMIENTO DEL FORMULARIO -->
+<script src="/js/crear-proyecto.js" defer></script>
+
+<%- include('partials/footer') %>

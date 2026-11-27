@@ -1,0 +1,226 @@
+
+<%- include('partials/header') %>
+
+<!-- Inicio de sesión EcoPulso -->
+<%
+    const mensajeError = typeof errorLogin !== 'undefined'
+        ? errorLogin
+        : null;
+
+    const correoGuardado = typeof correoAnterior !== 'undefined'
+        ? correoAnterior
+        : '';
+%>
+
+<section class="eco-login-pagina py-5">
+    <div class="container">
+
+        <div class="eco-login-diseno">
+
+            <!-- Presentación ambiental -->
+            <div class="eco-login-bienvenida">
+
+                <div class="eco-login-bienvenida-contenido">
+
+                    <span class="eco-login-etiqueta">
+                        <i class="bi bi-leaf-fill me-2"></i>
+                        El planeta también tiene voz
+                    </span>
+
+                    <div class="eco-login-mensaje">
+
+                        <div class="eco-login-emblema">
+                            <i class="bi bi-globe-americas"></i>
+                        </div>
+
+                        <h1 class="eco-login-titulo-bienvenida">
+                            Bienvenido a EcoPulso
+                        </h1>
+
+                        <p class="eco-login-texto-bienvenida">
+                            Un espacio donde las empresas y
+                            los ciudadanos se unen para
+                            transformar nuestro entorno
+                            a través de proyectos ambientales.
+                        </p>
+
+                    </div>
+
+                    <div class="eco-login-frase">
+                        <i class="bi bi-heart-fill me-2"></i>
+                        Cada acción cuenta para cuidar
+                        nuestro planeta.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Formulario de inicio de sesión -->
+            <div class="eco-login-panel">
+
+                <div class="eco-login-formulario">
+
+                    <div class="eco-login-encabezado">
+
+                        <div class="eco-login-icono-contenedor">
+                            <i class="bi bi-person-circle"></i>
+                        </div>
+
+                        <h2 class="fw-bold mt-3">
+                            Iniciar sesión
+                        </h2>
+
+                        <p class="text-muted">
+                            Ingresa a tu cuenta y sigue
+                            formando parte del cambio.
+                        </p>
+
+                    </div>
+
+                    <!-- Mensaje de error -->
+                    <% if (mensajeError) { %>
+
+                        <div
+                            class="alert alert-warning d-flex align-items-start gap-3 rounded-4 mb-4"
+                            role="alert"
+                            aria-live="polite"
+                        >
+
+                            <i class="bi bi-exclamation-circle-fill fs-4"></i>
+
+                            <div>
+                                <strong class="d-block mb-1">
+                                    No pudimos iniciar sesión
+                                </strong>
+
+                                <span>
+                                    <%= mensajeError %>
+                                </span>
+                            </div>
+
+                        </div>
+
+                    <% } %>
+
+                    <!-- Formulario -->
+                    <form action="/login" method="POST">
+
+                        <!-- Correo electrónico -->
+                        <div class="mb-4">
+
+                            <label
+                                for="correo"
+                                class="form-label fw-semibold"
+                            >
+                                <i class="bi bi-envelope me-2"></i>
+                                Correo electrónico
+                            </label>
+
+                            <input
+                                type="email"
+                                class="form-control eco-login-campo"
+                                id="correo"
+                                name="correo"
+                                placeholder="tu@correo.com"
+                                value="<%= correoGuardado %>"
+                                autocomplete="username"
+                                maxlength="254"
+                                aria-invalid="<%= mensajeError ? 'true' : 'false' %>"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- Contraseña -->
+                        <div class="mb-4">
+
+                            <label
+                                for="contrasena"
+                                class="form-label fw-semibold"
+                            >
+                                <i class="bi bi-lock me-2"></i>
+                                Contraseña
+                            </label>
+
+                            <input
+                                type="password"
+                                class="form-control eco-login-campo"
+                                id="contrasena"
+                                name="contrasena"
+                                placeholder="Ingresa tu contraseña"
+                                autocomplete="current-password"
+                                aria-invalid="<%= mensajeError ? 'true' : 'false' %>"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- Botón de ingreso -->
+                        <button
+                            type="submit"
+                            class="btn btn-eco eco-login-boton w-100 fw-bold"
+                        >
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Ingresar a EcoPulso
+                        </button>
+
+                    </form>
+
+                    <!-- Opciones de registro -->
+                    <div class="eco-login-registro">
+
+                        <p class="fw-semibold mb-2">
+                            ¿Todavía no tienes una cuenta?
+                        </p>
+
+                        <p class="text-muted small">
+                            Elige cómo quieres formar
+                            parte de nuestra comunidad.
+                        </p>
+
+                        <div class="eco-login-opciones">
+
+                            <a
+                                href="/registro-ciudadano"
+                                class="eco-login-opcion"
+                            >
+                                <i class="bi bi-person-heart"></i>
+
+                                <span>
+                                    Registrarme como ciudadano
+                                </span>
+                            </a>
+
+                            <a
+                                href="/registro-empresa"
+                                class="eco-login-opcion"
+                            >
+                                <i class="bi bi-building-add"></i>
+
+                                <span>
+                                    Registrar mi empresa
+                                </span>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Información de acceso -->
+                    <p class="eco-login-nota">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Acceso para ciudadanos, empresas
+                        y administradores registrados.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<%- include('partials/footer') %>

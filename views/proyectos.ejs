@@ -1,0 +1,132 @@
+
+<%- include('partials/header') %>
+
+<main class="container py-5">
+
+    <section class="mb-5">
+        <h1 class="fw-bold">
+            Proyectos ambientales 🌿
+        </h1>
+
+        <p class="text-muted">
+            Descubre iniciativas aprobadas por EcoPulso
+            y conoce cómo puedes contribuir al planeta.
+        </p>
+    </section>
+
+    <section>
+
+        <% if (proyectos.length === 0) { %>
+
+            <div class="alert alert-info">
+                Actualmente no hay proyectos ambientales disponibles.
+            </div>
+
+        <% } else { %>
+
+            <div class="row g-4">
+
+                <% proyectos.forEach(proyecto => { %>
+
+                    <div class="col-12 col-lg-6">
+
+                        <article class="card h-100 eco-admin-proyecto">
+
+                            <div class="card-body">
+
+                                <span class="badge text-bg-success mb-3">
+                                    Proyecto aprobado
+                                </span>
+
+                                <h2 class="card-title h4">
+                                    <%= proyecto.nombre %>
+                                </h2>
+
+                                <p>
+                                    <strong>Empresa:</strong>
+                                    <%= proyecto.empresa?.nombre || 'No disponible' %>
+                                </p>
+
+                                <p>
+                                    <strong>Responsable:</strong>
+                                    <%= proyecto.responsable %>
+                                </p>
+
+                                <p>
+                                    <strong>Ubicación:</strong>
+                                    <%= proyecto.ubicacion %>
+                                </p>
+
+                                <p class="card-text mt-3">
+                                    <%= proyecto.descripcion %>
+                                </p>
+
+                                <h3 class="h6 mt-4">
+                                    Cargos disponibles
+                                </h3>
+
+                                <ul class="list-group list-group-flush">
+
+                                    <% proyecto.cargos.forEach(cargo => { %>
+
+                                       
+<li class="list-group-item px-0">
+
+    <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
+
+        <div>
+            <strong><%= cargo.nombre %></strong>
+
+            <p class="text-muted small mb-0">
+                <%= cargo.cupos %> cupos disponibles
+            </p>
+        </div>
+
+        <form
+            action="/proyectos/<%= proyecto._id %>/inscribirse"
+            method="POST"
+        >
+
+            <input
+                type="hidden"
+                name="cargoId"
+                value="<%= cargo._id %>"
+            >
+
+            <button
+                type="submit"
+                class="btn btn-outline-success btn-sm"
+            >
+                <i class="bi bi-person-plus me-1"></i>
+                Quiero participar
+            </button>
+
+        </form>
+
+    </div>
+
+</li>
+
+
+                                    <% }) %>
+
+                                </ul>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </section>
+
+</main>
+
+<%- include('partials/footer') %>
+

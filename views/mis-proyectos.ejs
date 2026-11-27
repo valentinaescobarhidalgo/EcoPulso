@@ -1,0 +1,243 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     MIS PROYECTOS - EMPRESA
+===================================== -->
+
+<section class="eco-jornadas-hero py-5 text-center">
+    <div class="container">
+
+        <span class="eco-jornadas-etiqueta">
+            <i class="bi bi-building me-2"></i>
+            Espacio empresarial
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3">
+            Mis proyectos
+        </h1>
+
+        <p class="lead mx-auto mt-3 eco-jornadas-descripcion">
+            Consulta los proyectos ambientales de tu empresa,
+            revisa su estado y conoce cuántas personas
+            se han inscrito en cada cargo.
+        </p>
+
+        <a href="/empresa/crear-proyecto" class="btn btn-eco mt-3">
+            <i class="bi bi-plus-circle me-2"></i>
+            Crear nuevo proyecto
+        </a>
+
+    </div>
+</section>
+
+
+<!-- =====================================
+     LISTADO DE PROYECTOS
+===================================== -->
+
+<section class="py-5">
+    <div class="container">
+
+        <% if (proyectos.length === 0) { %>
+
+            <!-- EMPRESA SIN PROYECTOS -->
+            <div class="eco-mapa-vacio text-center p-5">
+
+                <i class="bi bi-folder2-open display-1"></i>
+
+                <h2 class="h4 fw-bold mt-3">
+                    Todavía no has creado proyectos
+                </h2>
+
+                <p class="text-muted">
+                    Comienza creando una iniciativa ambiental
+                    para que EcoPulso pueda revisarla.
+                </p>
+
+                <a href="/empresa/crear-proyecto"
+                   class="btn btn-eco mt-3">
+                    Crear mi primer proyecto
+                </a>
+
+            </div>
+
+        <% } else { %>
+
+            <div class="row g-4">
+
+                <% proyectos.forEach(proyecto => { %>
+
+                    <div class="col-12 col-lg-6">
+
+                        <article class="card eco-admin-proyecto h-100">
+
+                            <div class="card-body">
+
+                                <!-- ESTADO DEL PROYECTO -->
+                                <% if (proyecto.estado === 'pendiente') { %>
+
+                                    <span class="badge text-bg-warning mb-3">
+                                        Pendiente de aprobación
+                                    </span>
+
+                                <% } else if (proyecto.estado === 'aprobado') { %>
+
+                                    <span class="badge text-bg-success mb-3">
+                                        Aprobado
+                                    </span>
+
+                                <% } else { %>
+
+                                    <span class="badge text-bg-secondary mb-3">
+                                        Finalizado
+                                    </span>
+
+                                <% } %>
+
+
+                                <!-- NOMBRE DEL PROYECTO -->
+                                <h2 class="card-title h4">
+                                    <%= proyecto.nombre %>
+                                </h2>
+
+
+                                <!-- UBICACIÓN -->
+                                <p>
+                                    <i class="bi bi-geo-alt-fill me-2"></i>
+
+                                    <strong>Ubicación:</strong>
+                                    <%= proyecto.ubicacion %>
+                                </p>
+
+
+                                <!-- RESPONSABLE -->
+                                <p>
+                                    <i class="bi bi-person-badge me-2"></i>
+
+                                    <strong>Responsable:</strong>
+                                    <%= proyecto.responsable %>
+                                </p>
+
+
+                                <!-- DESCRIPCIÓN -->
+                                <p class="card-text">
+                                    <%= proyecto.descripcion %>
+                                </p>
+
+
+                                <!-- =====================================
+                                     CARGOS DEL PROYECTO
+                                ===================================== -->
+
+                                <h3 class="h6 fw-bold mt-4">
+                                    <i class="bi bi-people-fill me-2"></i>
+                                    Participación por cargo
+                                </h3>
+
+                                <ul class="list-group list-group-flush">
+
+                                    <% proyecto.cargos.forEach(cargo => { %>
+
+                                        <%
+                                            // Identificar el cargo dentro del proyecto
+                                            const clave =
+                                                proyecto._id.toString() +
+                                                '_' +
+                                                cargo._id.toString();
+
+                                            // Consultar participantes registrados
+                                            const inscritos =
+                                                inscritosPorCargo[clave] || 0;
+
+                                            // Calcular cupos disponibles
+                                            const disponibles = Math.max(
+                                                0,
+                                                cargo.cupos - inscritos
+                                            );
+
+                                            // Calcular porcentaje de ocupación
+                                            const porcentaje = Math.min(
+                                                100,
+                                                Math.round(
+                                                    (inscritos / cargo.cupos) * 100
+                                                )
+                                            );
+                                        %>
+
+                                        <li class="list-group-item px-0 py-3">
+
+                                            <!-- NOMBRE Y DISPONIBILIDAD -->
+                                            <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-2">
+
+                                                <strong>
+                                                    <i class="bi bi-people me-2"></i>
+                                                    <%= cargo.nombre %>
+                                                </strong>
+
+                                                <% if (disponibles > 0) { %>
+
+                                                    <span class="badge text-bg-success">
+                                                        <%= disponibles %> disponibles
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="badge text-bg-secondary">
+                                                        Cupos completos
+                                                    </span>
+
+                                                <% } %>
+
+                                            </div>
+
+
+                                            <!-- CONTADOR DE INSCRIPCIONES -->
+                                            <p class="text-muted small mb-2">
+                                                <%= inscritos %> inscritos
+                                                de <%= cargo.cupos %> cupos
+                                            </p>
+
+
+                                            <!-- BARRA DE PROGRESO -->
+                                            <div
+                                                class="progress eco-cupos-progreso"
+                                                role="progressbar"
+                                                aria-label="Ocupación del cargo <%= cargo.nombre %>"
+                                                aria-valuenow="<%= Math.min(inscritos, cargo.cupos) %>"
+                                                aria-valuemin="0"
+                                                aria-valuemax="<%= cargo.cupos %>"
+                                            >
+
+                                                <div
+                                                    class="progress-bar bg-success eco-cupos-barra"
+                                                    data-porcentaje="<%= porcentaje %>"
+                                                ></div>
+
+                                            </div>
+
+                                        </li>
+
+                                    <% }) %>
+
+                                </ul>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+    </div>
+</section>
+
+<!-- JavaScript de las barras de progreso -->
+<script src="/js/mis-proyectos.js" defer></script>
+
+<%- include('partials/footer') %>

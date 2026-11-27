@@ -1,0 +1,922 @@
+
+<%- include('partials/header') %>
+
+<!-- =====================================
+     ECOPULSO - ECOJORNADAS
+     CONTENIDO ADAPTADO SEGÚN EL ROL
+===================================== -->
+
+<%
+    const rolActual = usuarioActual
+        ? usuarioActual.rol
+        : 'visitante';
+
+    const esAdministrador = rolActual === 'admin';
+    const esEmpresa = rolActual === 'empresa';
+    const esCiudadano = rolActual === 'ciudadano';
+
+    const clasesProblematicas = {
+        'Contaminación del agua': 'agua',
+        'Acumulación de residuos': 'residuos',
+        'Desperdicio de agua': 'desperdicio',
+        'Deterioro de zonas verdes': 'verdes',
+        'Otras problemáticas ambientales': 'otro'
+    };
+%>
+
+
+<!-- =====================================
+     ENCABEZADO
+===================================== -->
+
+<section class="eco-jornadas-hero py-5 text-center">
+
+    <div class="container">
+
+        <span class="eco-jornadas-etiqueta">
+
+            <i class="bi bi-people-fill me-2"></i>
+
+            <% if (esAdministrador) { %>
+
+                Seguimiento de proyectos ambientales
+
+            <% } else if (esEmpresa) { %>
+
+                Empresas que impulsan el cambio
+
+            <% } else { %>
+
+                Juntos hacemos la diferencia
+
+            <% } %>
+
+        </span>
+
+
+        <h1 class="display-5 fw-bold mt-3">
+
+            <% if (esAdministrador) { %>
+
+                Jornadas ambientales autorizadas
+
+            <% } else { %>
+
+                EcoJornadas
+
+            <% } %>
+
+        </h1>
+
+
+        <p class="lead mx-auto mt-3 eco-jornadas-descripcion">
+
+            <% if (esAdministrador) { %>
+
+                Consulta los proyectos ambientales aprobados
+                por EcoPulso, revisa sus cargos y conoce
+                cómo avanza la participación ciudadana.
+
+            <% } else if (esEmpresa) { %>
+
+                Explora las iniciativas ambientales
+                aprobadas y conoce cómo las empresas
+                y los ciudadanos trabajan por nuestro planeta.
+
+            <% } else if (esCiudadano) { %>
+
+                Descubre proyectos ambientales aprobados
+                por EcoPulso y encuentra una oportunidad
+                para contribuir al cuidado de nuestro planeta.
+
+            <% } else { %>
+
+                Conoce las jornadas ambientales de nuestra
+                comunidad y descubre cómo puedes formar
+                parte del cambio.
+
+            <% } %>
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     PROYECTOS AMBIENTALES DISPONIBLES
+===================================== -->
+
+<section class="py-5" id="proyectos-disponibles">
+
+    <div class="container">
+
+        <!-- ENCABEZADO DE LA SECCIÓN -->
+        <div class="text-center mb-5">
+
+            <h2 class="fw-bold eco-jornadas-titulo">
+
+                <% if (esAdministrador) { %>
+
+                    Proyectos aprobados y participación
+
+                <% } else if (esEmpresa) { %>
+
+                    Iniciativas de nuestra comunidad
+
+                <% } else if (esCiudadano) { %>
+
+                    ¡Participa en nuestros proyectos!
+
+                <% } else { %>
+
+                    Descubre nuestras jornadas ambientales
+
+                <% } %>
+
+            </h2>
+
+
+            <p class="text-muted">
+
+                <% if (esAdministrador) { %>
+
+                    Estas son las jornadas ambientales
+                    autorizadas para su publicación.
+                    Aquí puedes consultar los cargos,
+                    los cupos y las inscripciones registradas.
+
+                <% } else if (esEmpresa) { %>
+
+                    Conoce las jornadas disponibles
+                    y las necesidades de participación
+                    de cada proyecto ambiental.
+
+                <% } else if (esCiudadano) { %>
+
+                    Conoce las iniciativas disponibles
+                    y elige el cargo en el que deseas colaborar.
+
+                <% } else { %>
+
+                    Explora las iniciativas de EcoPulso
+                    y conoce sus oportunidades de participación.
+
+                <% } %>
+
+            </p>
+
+        </div>
+
+
+        <!-- =====================================
+             MENSAJES INFORMATIVOS
+        ===================================== -->
+
+        <% if (esAdministrador) { %>
+
+            <div class="alert alert-info mb-4" role="status">
+
+                <i class="bi bi-shield-check me-2"></i>
+
+                <strong>Vista de administración:</strong>
+
+                estás consultando las jornadas aprobadas
+                y su participación actual.
+
+                Para aprobar o finalizar proyectos,
+                utiliza tu panel de administración.
+
+                <a href="/admin" class="alert-link ms-1">
+                    Ir al panel
+                </a>
+
+            </div>
+
+        <% } %>
+
+
+        <% if (esEmpresa) { %>
+
+            <div class="alert alert-info mb-4">
+
+                <i class="bi bi-building me-2"></i>
+
+                <strong>Vista empresarial:</strong>
+
+                puedes consultar las jornadas ambientales,
+                sus cargos y el avance de las inscripciones.
+
+                Para administrar tus propios proyectos,
+                visita
+
+                <a href="/empresa" class="alert-link">
+                    Mis proyectos
+                </a>.
+
+            </div>
+
+        <% } %>
+
+
+        <!-- INSCRIPCIÓN EXITOSA -->
+        <% if (esCiudadano && inscripcionExitosa) { %>
+
+            <div class="alert alert-success mb-4" role="status">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                <strong>
+                    ¡Inscripción realizada correctamente!
+                </strong>
+
+                Ya formas parte del proyecto ambiental.
+
+                Puedes consultarlo en
+                Mi perfil → Mis participaciones.
+
+            </div>
+
+        <% } %>
+
+
+        <!-- CANCELACIÓN EXITOSA -->
+        <% if (esCiudadano && cancelacionExitosa) { %>
+
+            <div class="alert alert-success mb-4" role="status">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                <strong>
+                    Participación cancelada correctamente.
+                </strong>
+
+                El cupo vuelve a estar disponible
+                para otros ciudadanos.
+
+            </div>
+
+        <% } %>
+
+
+        <!-- PROYECTO SELECCIONADO DESDE ECOMAPA -->
+        <% if (proyectoSeleccionado) { %>
+
+            <div class="alert alert-info mb-4" role="status">
+
+                <i class="bi bi-geo-alt-fill me-2"></i>
+
+                <% if (esAdministrador) { %>
+
+                    Estás revisando la jornada autorizada
+
+                <% } else { %>
+
+                    Estás consultando el proyecto
+
+                <% } %>
+
+                <strong>
+                    <%= proyectoSeleccionado.nombre %>
+                </strong>.
+
+            </div>
+
+        <% } %>
+
+
+        <!-- =====================================
+             LISTADO DE PROYECTOS
+        ===================================== -->
+
+        <% if (proyectos.length > 0) { %>
+
+            <%
+                const proyectosOrdenados = proyectoSeleccionado
+                    ? [
+                        proyectoSeleccionado,
+                        ...proyectos.filter(
+                            proyecto =>
+                                proyecto._id.toString() !==
+                                proyectoSeleccionado._id.toString()
+                        )
+                    ]
+                    : proyectos;
+            %>
+
+
+            <div class="row g-4">
+
+                <% proyectosOrdenados.forEach(proyecto => { %>
+
+                    <%
+                        const esSeleccionado =
+                            proyectoSeleccionado &&
+                            proyecto._id.toString() ===
+                            proyectoSeleccionado._id.toString();
+
+                        const problematica =
+                            proyecto.problematica ||
+                            'Otras problemáticas ambientales';
+
+                        const claseProblematica =
+                            clasesProblematicas[problematica] ||
+                            'otro';
+                    %>
+
+
+                    <div class="col-12 col-lg-6">
+
+                        <article
+                            id="<%= esSeleccionado
+                                ? 'proyecto-seleccionado'
+                                : 'proyecto-' + proyecto._id %>"
+                            class="card eco-jornada-card h-100 border-0 shadow-sm"
+                        >
+
+                            <div class="card-body p-4">
+
+                                <!-- =====================================
+                                     IDENTIDAD DEL PROYECTO
+                                ===================================== -->
+
+                                <div class="text-center mb-4">
+
+                                    <div class="eco-jornada-icono jornada-naturaleza mx-auto mb-3">
+
+                                        <i class="bi bi-tree-fill"></i>
+
+                                    </div>
+
+
+                                    <span class="badge eco-jornada-badge">
+
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+
+                                        <% if (esAdministrador) { %>
+
+                                            Jornada autorizada
+
+                                        <% } else { %>
+
+                                            Proyecto aprobado
+
+                                        <% } %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- NOMBRE -->
+                                <h3 class="h5 fw-bold text-center">
+
+                                    <%= proyecto.nombre %>
+
+                                </h3>
+
+
+                                <!-- PROBLEMÁTICA -->
+                                <div
+                                    class="eco-mapa-problematica eco-mapa-problematica-<%= claseProblematica %> mt-3 mb-3"
+                                >
+
+                                    <span
+                                        class="eco-mapa-problematica-punto"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                    <span>
+
+                                        <strong>
+                                            Problemática ambiental:
+                                        </strong>
+
+                                        <%= problematica %>
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- DESCRIPCIÓN -->
+                                <p class="text-muted mt-3">
+
+                                    <%= proyecto.descripcion %>
+
+                                </p>
+
+
+                                <!-- =====================================
+                                     DATOS DEL PROYECTO
+                                ===================================== -->
+
+                                <div class="eco-mapa-detalles mt-4">
+
+                                    <p class="mb-2">
+
+                                        <i class="bi bi-geo-alt-fill me-2"></i>
+
+                                        <strong>Ubicación:</strong>
+
+                                        <%= proyecto.ubicacion %>
+
+                                    </p>
+
+
+                                    <p class="mb-2">
+
+                                        <i class="bi bi-building me-2"></i>
+
+                                        <strong>Empresa:</strong>
+
+                                        <%= proyecto.empresa?.nombre || 'No disponible' %>
+
+                                    </p>
+
+
+                                    <p class="mb-0">
+
+                                        <i class="bi bi-person-badge me-2"></i>
+
+                                        <strong>Responsable:</strong>
+
+                                        <%= proyecto.responsable %>
+
+                                    </p>
+
+                                </div>
+
+
+                                <hr class="my-4">
+
+
+                                <!-- =====================================
+                                     CARGOS Y PARTICIPACIÓN
+                                ===================================== -->
+
+                                <h4 class="h6 fw-bold mb-3">
+
+                                    <i class="bi bi-people-fill me-2"></i>
+
+                                    <% if (esAdministrador) { %>
+
+                                        Seguimiento de cargos y cupos
+
+                                    <% } else if (esEmpresa) { %>
+
+                                        Cargos y cupos del proyecto
+
+                                    <% } else if (esCiudadano) { %>
+
+                                        ¿Cómo puedes participar?
+
+                                    <% } else { %>
+
+                                        Oportunidades de participación
+
+                                    <% } %>
+
+                                </h4>
+
+
+                                <div class="list-group list-group-flush">
+
+                                    <% proyecto.cargos.forEach(cargo => { %>
+
+                                        <%
+                                            const clave =
+                                                proyecto._id.toString() +
+                                                '_' +
+                                                cargo._id.toString();
+
+                                            const inscritos =
+                                                inscritosPorCargo[clave] || 0;
+
+                                            const disponibles = Math.max(
+                                                0,
+                                                cargo.cupos - inscritos
+                                            );
+
+                                            const porcentaje = Math.min(
+                                                100,
+                                                Math.round(
+                                                    (inscritos / cargo.cupos) * 100
+                                                )
+                                            );
+
+                                            const yaInscrito =
+                                                misInscripciones.has(clave);
+                                        %>
+
+
+                                        <!-- CARGO INDIVIDUAL -->
+                                        <div class="list-group-item px-0 py-3">
+
+                                            <!-- NOMBRE Y CUPOS -->
+                                            <div class="d-flex justify-content-between align-items-center gap-2 flex-wrap mb-2">
+
+                                                <h5 class="h6 fw-semibold mb-0">
+
+                                                    <i class="bi bi-people me-2"></i>
+
+                                                    <%= cargo.nombre %>
+
+                                                </h5>
+
+
+                                                <% if (disponibles > 0) { %>
+
+                                                    <span class="badge text-bg-success">
+
+                                                        <%= disponibles %>
+                                                        disponibles
+
+                                                    </span>
+
+                                                <% } else { %>
+
+                                                    <span class="badge text-bg-secondary">
+
+                                                        Cupos completos
+
+                                                    </span>
+
+                                                <% } %>
+
+                                            </div>
+
+
+                                            <!-- NÚMERO DE INSCRITOS -->
+                                            <p class="text-muted small mb-2">
+
+                                                <%= inscritos %> inscritos de
+                                                <%= cargo.cupos %> cupos
+
+                                            </p>
+
+
+                                            <!-- =====================================
+                                                 BARRA DE PROGRESO
+                                            ===================================== -->
+
+                                            <div
+                                                class="progress eco-cupos-progreso mb-3"
+                                                role="progressbar"
+                                                aria-label="Ocupación del cargo <%= cargo.nombre %>"
+                                                aria-valuenow="<%= Math.min(inscritos, cargo.cupos) %>"
+                                                aria-valuemin="0"
+                                                aria-valuemax="<%= cargo.cupos %>"
+                                            >
+
+                                                <div
+                                                    class="progress-bar bg-success eco-cupos-barra"
+                                                    data-porcentaje="<%= porcentaje %>"
+                                                ></div>
+
+                                            </div>
+
+
+                                            <!-- =====================================
+                                                 ACCIONES SEGÚN EL ROL
+                                            ===================================== -->
+
+                                            <% if (esAdministrador) { %>
+
+                                                <!-- ADMINISTRADOR -->
+                                                <p class="text-muted small mb-0">
+
+                                                    <i class="bi bi-eye me-1"></i>
+
+                                                    Información de participación
+                                                    disponible para seguimiento.
+
+                                                </p>
+
+
+                                            <% } else if (esEmpresa) { %>
+
+                                                <!-- EMPRESA -->
+                                                <p class="text-muted small mb-0">
+
+                                                    <i class="bi bi-building me-1"></i>
+
+                                                    Consulta de cargos e inscripciones.
+
+                                                </p>
+
+
+                                            <% } else if (yaInscrito && esCiudadano) { %>
+
+                                                <!-- CIUDADANO INSCRITO -->
+                                                <div class="eco-participacion-registrada">
+
+                                                    <p class="text-success fw-semibold mb-3">
+
+                                                        <i class="bi bi-check-circle-fill me-2"></i>
+
+                                                        Ya estás participando
+                                                        en este cargo
+
+                                                    </p>
+
+
+                                                    <form
+                                                        action="/proyectos/<%= proyecto._id %>/cancelar-participacion"
+                                                        method="POST"
+                                                        class="form-cancelar-participacion"
+                                                    >
+
+                                                        <input
+                                                            type="hidden"
+                                                            name="cargoId"
+                                                            value="<%= cargo._id %>"
+                                                        >
+
+                                                        <button
+                                                            type="submit"
+                                                            class="btn btn-outline-danger btn-sm"
+                                                        >
+
+                                                            <i class="bi bi-x-circle me-1"></i>
+
+                                                            Cancelar participación
+
+                                                        </button>
+
+                                                    </form>
+
+                                                </div>
+
+
+                                            <% } else if (disponibles === 0) { %>
+
+                                                <!-- CUPOS COMPLETOS -->
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-secondary btn-sm"
+                                                    disabled
+                                                >
+
+                                                    <i class="bi bi-people-fill me-1"></i>
+
+                                                    Cupos completos
+
+                                                </button>
+
+
+                                            <% } else if (!usuarioActual) { %>
+
+                                                <!-- VISITANTE -->
+                                                <a
+                                                    href="/login"
+                                                    class="btn btn-outline-success btn-sm"
+                                                >
+
+                                                    <i class="bi bi-box-arrow-in-right me-1"></i>
+
+                                                    Inicia sesión para participar
+
+                                                </a>
+
+
+                                            <% } else if (esCiudadano) { %>
+
+                                                <!-- CIUDADANO: INSCRIBIRSE -->
+                                                <form
+                                                    action="/proyectos/<%= proyecto._id %>/inscribirse"
+                                                    method="POST"
+                                                >
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="cargoId"
+                                                        value="<%= cargo._id %>"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn btn-outline-success btn-sm"
+                                                    >
+
+                                                        <i class="bi bi-person-plus-fill me-1"></i>
+
+                                                        Quiero participar
+
+                                                    </button>
+
+                                                </form>
+
+
+                                            <% } else { %>
+
+                                                <span class="text-muted small">
+
+                                                    Inscripciones disponibles
+                                                    únicamente para ciudadanos.
+
+                                                </span>
+
+                                            <% } %>
+
+                                        </div>
+
+                                        <!-- FIN DEL CARGO -->
+
+                                    <% }) %>
+
+                                </div>
+
+                                <!-- FIN DE LOS CARGOS -->
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <!-- =====================================
+                 SIN PROYECTOS DISPONIBLES
+            ===================================== -->
+
+            <div class="eco-mapa-vacio text-center p-5">
+
+                <i class="bi bi-tree display-1"></i>
+
+                <h3 class="fw-bold mt-3">
+
+                    <% if (esAdministrador) { %>
+
+                        No hay jornadas autorizadas actualmente
+
+                    <% } else { %>
+
+                        Todavía no hay proyectos disponibles
+
+                    <% } %>
+
+                </h3>
+
+
+                <p class="text-muted">
+
+                    <% if (esAdministrador) { %>
+
+                        Cuando apruebes nuevos proyectos
+                        desde el panel de administración,
+                        aparecerán en esta sección.
+
+                    <% } else { %>
+
+                        Las empresas están preparando nuevas iniciativas.
+                        Cuando sean aprobadas,
+                        podrás encontrarlas aquí.
+
+                    <% } %>
+
+                </p>
+
+
+                <a
+                    href="<%= esAdministrador ? '/admin' : '/ecomapa' %>"
+                    class="btn btn-eco mt-3"
+                >
+
+                    <i class="bi bi-map me-2"></i>
+
+                    <%= esAdministrador
+                        ? 'Ir al panel de administración'
+                        : 'Explorar EcoMapa' %>
+
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     INVITACIÓN FINAL SEGÚN EL ROL
+===================================== -->
+
+<section class="eco-jornadas-invitacion py-5">
+
+    <div class="container text-center">
+
+        <% if (esAdministrador) { %>
+
+            <i class="bi bi-shield-check eco-jornadas-corazon"></i>
+
+            <h2 class="fw-bold mt-3">
+                Cada proyecto aprobado cuenta
+            </h2>
+
+            <p class="mx-auto eco-jornadas-invitacion-texto">
+
+                Tu labor permite que las iniciativas
+                ambientales lleguen a nuestra comunidad.
+                Consulta el progreso de las jornadas
+                y administra los proyectos
+                desde tu panel.
+
+            </p>
+
+
+            <a
+                href="/admin"
+                class="btn btn-eco btn-lg mt-3"
+            >
+
+                <i class="bi bi-speedometer2 me-2"></i>
+
+                Volver al panel de administración
+
+            </a>
+
+
+        <% } else if (esEmpresa) { %>
+
+            <i class="bi bi-building-check eco-jornadas-corazon"></i>
+
+            <h2 class="fw-bold mt-3">
+                Tu empresa también transforma el planeta
+            </h2>
+
+            <p class="mx-auto eco-jornadas-invitacion-texto">
+
+                Conoce las jornadas de nuestra comunidad
+                y continúa impulsando proyectos
+                que generen un impacto ambiental positivo.
+
+            </p>
+
+
+            <a
+                href="/empresa"
+                class="btn btn-eco btn-lg mt-3"
+            >
+
+                <i class="bi bi-folder-check me-2"></i>
+
+                Ver mis proyectos
+
+            </a>
+
+
+        <% } else { %>
+
+            <i class="bi bi-heart-handshake eco-jornadas-corazon"></i>
+
+            <h2 class="fw-bold mt-3">
+                El cambio comienza con nosotros
+            </h2>
+
+            <p class="mx-auto eco-jornadas-invitacion-texto">
+
+                Cada proyecto ambiental representa
+                una oportunidad para transformar
+                nuestro entorno.
+
+                Explora EcoMapa, conoce las iniciativas
+                de tu comunidad y encuentra
+                una manera de hacer parte del cambio.
+
+            </p>
+
+
+            <a
+                href="/ecomapa"
+                class="btn btn-eco btn-lg mt-3"
+            >
+
+                <i class="bi bi-geo-alt-fill me-2"></i>
+
+                Explorar EcoMapa
+
+            </a>
+
+        <% } %>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================
+     BARRAS DE PROGRESO Y CANCELACIÓN
+===================================== -->
+
+<script src="/js/mis-proyectos.js" defer></script>
+
+<%- include('partials/footer') %>
